@@ -1,7 +1,7 @@
 package models
 
 import (
-	"fmt"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -16,7 +16,7 @@ type Wallet struct {
 // Внесение депозита
 func (wallet *Wallet) Deposit(amount int) error {
 	if amount <= 0 {
-		return fmt.Errorf("Сумма депозита не может быть меньше и равной нулю")
+		return errors.New("сумма депозита не может быть меньше и равной нулю")
 	}
 
 	wallet.Amount += amount
@@ -27,10 +27,10 @@ func (wallet *Wallet) Deposit(amount int) error {
 // Вывод средств
 func (wallet *Wallet) Withdraw(amount int) error {
 	if amount <= 0 {
-		return fmt.Errorf("Запрашиваемая сумма не может быть меньше или равной нулю")
+		return errors.New("запрашиваемая сумма не может быть меньше или равной нулю")
 	}
 	if amount > wallet.Amount {
-		return fmt.Errorf("Недостаточно средств на счете")
+		return errors.New("недостаточно средств на счете")
 	}
 
 	wallet.Amount -= amount
