@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"main/models"
 	"net/http"
 	"strconv"
+	"wallet/models"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -41,15 +41,15 @@ func (server *Server) CreateWallet(ctx *gin.Context) {
 	}
 
 	// Запись ввода в модель пользователя
-	user := models.Wallet{Person: input.Person, Amount: input.Amount}
+	wallet := models.Wallet{Person: input.Person, Amount: input.Amount}
 
 	// Запись модели в БД
-	if err := server.db.Create(&user).Error; err != nil {
+	if err := server.db.Create(&wallet).Error; err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка записи в БД " + err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "Счет создан"})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Счет создан"})
 }
 
 func (server *Server) WalletOperation(ctx *gin.Context) {
@@ -108,5 +108,5 @@ func (server *Server) WalletAmount(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": wallet.Amount})
+	ctx.JSON(http.StatusOK, gin.H{"message": int(wallet.Amount)})
 }
