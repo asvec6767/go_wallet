@@ -3,6 +3,7 @@ package handlers
 import (
 	"main/models"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -92,4 +93,20 @@ func (server *Server) GetWalletById(id uint) (models.Wallet, error) {
 	}
 
 	return wallet, nil
+}
+
+func (server *Server) WalletAmount(ctx *gin.Context) {
+	wallet_id, err := strconv.Atoi(ctx.Param("wallet_uuid"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Ошибка при получении значения wallet_uuid " + err.Error()})
+		return
+	}
+
+	wallet, err := server.GetWalletById(uint(wallet_id))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Ошибка при получении кошелька по id " + err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": wallet.Amount})
 }

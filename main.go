@@ -41,7 +41,7 @@ func SetupRouter() *gin.Engine {
 	group := router.Group("/api/v1")
 	group.POST("/create", server.CreateWallet)
 	group.POST("/wallet", server.WalletOperation)
-	// group.POST("/wallets", server.Wallets)
+	group.POST("/wallets/:wallet_uuid", server.WalletAmount)
 
 	return router
 }
