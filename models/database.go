@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -19,10 +19,18 @@ func SetupDataBase() (*gorm.DB, error) {
 		log.Fatal("Ошибка загрузки env " + err.Error())
 		// return nil, err
 	}
-	dbUrl := fmt.Sprint(os.Getenv("DATABASE_URL"))
 
-	// Запуск БД
-	db, err := gorm.Open(sqlite.Open(dbUrl), &gorm.Config{})
+	// Запуск БД SQLite
+	// dbUrl := fmt.Sprint(os.Getenv("DATABASE_URL"))
+	// db, err := gorm.Open(sqlite.Open(dbUrl), &gorm.Config{})
+	// if err != nil {
+	// 	log.Fatal("Ошибка при запуске БД " + err.Error())
+	// 	// return nil, err
+	// }
+
+	// Запуск БД PostgreSQL
+	dsn := fmt.Sprint(os.Getenv("DSN"))
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Ошибка при запуске БД " + err.Error())
 		// return nil, err
